@@ -1,0 +1,112 @@
+version: '3.9'
+
+services:
+  menu-db:
+    image: postgres:16
+    container_name: menu-db
+    environment:
+      POSTGRES_USER: ${MENU_DB_USER}
+      POSTGRES_PASSWORD: ${MENU_DB_PASSWORD}
+      POSTGRES_DB: ${MENU_DB_NAME}
+    ports:
+      - "${MENU_DB_PORT}:5432"
+    volumes:
+      - menu-db-data:/var/lib/postgresql/data
+    networks:
+      - menu-db-net
+
+  menu-service:
+    build:
+      context: ./menu-service
+    container_name: menu-service
+    environment:
+      DB_HOST: menu-db
+      DB_PORT: 5432
+      DB_USER: ${MENU_DB_USER}
+      DB_PASSWORD: ${MENU_DB_PASSWORD}
+      DB_NAME: ${MENU_DB_NAME}
+      SERVICE_PORT: ${MENU_SERVICE_PORT}
+    ports:
+      - "${MENU_SERVICE_PORT}:${MENU_SERVICE_PORT}"
+    depends_on:
+      - menu-db
+    networks:
+      - shared
+      - menu-db-net
+
+  customer-db:
+    image: postgres:16
+    container_name: customer-db
+    environment:
+      POSTGRES_USER: ${CUSTOMER_DB_USER}
+      POSTGRES_PASSWORD: ${CUSTOMER_DB_PASSWORD}
+      POSTGRES_DB: ${CUSTOMER_DB_NAME}
+    ports:
+      - "${CUSTOMER_DB_PORT}:5432"
+    volumes:
+      - customer-db-data:/var/lib/postgresql/data
+    networks:
+      - customer-db-net
+
+  customer-service:
+    build:
+      context: ./customer-service
+    container_name: customer-service
+    environment:
+      DB_HOST: customer-db
+      DB_PORT: 5432
+      DB_USER: ${CUSTOMER_DB_USER}
+      DB_PASSWORD: ${CUSTOMER_DB_PASSWORD}
+      DB_NAME: ${CUSTOMER_DB_NAME}
+      SERVICE_PORT: ${CUSTOMER_SERVICE_PORT}
+    ports:
+      - "${CUSTOMER_SERVICE_PORT}:${CUSTOMER_SERVICE_PORT}"
+    depends_on:
+      - customer-db
+    networks:
+      - shared
+      - customer-db-net
+
+  order-db:
+    image: postgres:16
+    container_name: order-db
+    environment:
+      POSTGRES_USER: ${ORDER_DB_USER}
+      POSTGRES_PASSWORD: ${ORDER_DB_PASSWORD}
+      POSTGRES_DB: ${ORDER_DB_NAME}
+    ports:
+      - "${ORDER_DB_PORT}:5432"
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+    networks:
+      - order-db-net
+
+  order-service:
+    build:
+      context: ./order-service
+    container_name: order-service
+    environment:
+      DB_HOST: order-db
+      DB_PORT: 5432
+      DB_USER: ${ORDER_DB_USER}
+      DB_PASSWORD: ${ORDER_DB_PASSWORD}
+      DB_NAME: ${ORDER_DB_NAME}
+      SERVICE_PORT: ${ORDER_SERVICE_PORT}
+    ports:
+      - "${ORDER_SERVICE_PORT}:${ORDER_SERVICE_PORT}"
+    depends_on:
+      - order-db
+    networks:
+      - shared
+      - order-db-net
+
+volumes:
+  menu-db-data:
+  customer-db-data:
+  order-db-data:
+
+networks:
+  shared:
+  menu-db-net:
+  customer-db-net:
+  order-db-net:

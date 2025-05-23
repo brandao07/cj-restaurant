@@ -26,8 +26,6 @@ func NewMenuHandler(service *services.MenuService) *MenuHandler {
 // @Produce      json
 // @Param        menu  body  dtos.CreateMenuDTO  true  "Menu to create"
 // @Success      201   {object}  dtos.Menu
-// @Failure      400   {object}  map[string]string
-// @Failure      500   {object}  map[string]string
 // @Router       /api/menus [post]
 func (h *MenuHandler) CreateMenu(c echo.Context) error {
 	var dto dtos.CreateMenuDTO
@@ -52,8 +50,6 @@ func (h *MenuHandler) CreateMenu(c echo.Context) error {
 // @Tags         menus
 // @Param        id   path      int  true  "Menu ID"
 // @Success      200  {object}  map[string]string
-// @Failure      400  {object}  map[string]string
-// @Failure      500  {object}  map[string]string
 // @Router       /api/menus/{id}/deactivate [patch]
 func (h *MenuHandler) DeactivateMenu(c echo.Context) error {
 	id := c.Param("id")
@@ -65,6 +61,22 @@ func (h *MenuHandler) DeactivateMenu(c echo.Context) error {
 	if err := h.Service.DeactivateMenu(menuID); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to deactivate menu: " + err.Error()})
 	}
-
 	return c.JSON(http.StatusOK, map[string]string{"status": "success"})
+}
+
+// GetAllActiveMenus godoc
+// @Summary      Get all active menus
+// @Description  Returns a list of all active menus (not soft-deleted)
+// @Tags         menus
+// @Produce      json
+// @Success      200  {array}   dtos.Menu
+// @Failure      500  {object}  map[string]string
+// @Router       /api/menus [get]
+func (h *MenuHandler) GetAllActiveMenus(c echo.Context) error {
+	menus, err := h.Service.GetAllActiveMenus()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch menus: " + err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, menus)
 }

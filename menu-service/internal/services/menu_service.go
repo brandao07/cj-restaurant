@@ -61,3 +61,12 @@ func (s *MenuService) DeactivateMenu(id int) error {
 
 	return nil
 }
+
+func (s *MenuService) GetAllActiveMenus() ([]dtos.Menu, error) {
+	menus, err := s.MenuRepository.GetAllActiveMenus()
+	if err != nil {
+		return nil, err
+	}
+
+	return menus, nil
+}

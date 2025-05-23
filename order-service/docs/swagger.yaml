@@ -1,0 +1,9 @@
+basePath: /
+host: localhost:8083
+info:
+  contact: {}
+  description: API for managing restaurant orders.
+  title: CJ Restaurant Order-Service API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

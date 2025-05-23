@@ -11,7 +11,8 @@ services:
     ports:
       - "${MENU_DB_PORT}:5432"
     volumes:
-      - menu-db-data:/var/lib/postgresql/data
+      - ./menu-service/db:/docker-entrypoint-initdb.d
+      - menu-db-data:/var/lib/postgresql/data          
     networks:
       - menu-db-net
 

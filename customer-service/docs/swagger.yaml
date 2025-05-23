@@ -1,0 +1,138 @@
+basePath: /
+definitions:
+  dtos.CreateCustomerDTO:
+    properties:
+      order_id:
+        type: integer
+      restaurant_table_id:
+        type: integer
+    type: object
+  dtos.Customer:
+    properties:
+      id:
+        type: integer
+      order_id:
+        type: integer
+      restaurant_table_id:
+        type: integer
+      status:
+        type: string
+    type: object
+  dtos.RestaurantTable:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    type: object
+  dtos.UpdateCustomerDTO:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact: {}
+  description: API for managing restaurant customers.
+  title: CJ Restaurant Customer-Service API
+  version: "1.0"
+paths:
+  /customers:
+    patch:
+      consumes:
+      - application/json
+      description: Updates an existing customer's information
+      parameters:
+      - description: Customer update data
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateCustomerDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Failed to update customer
+          schema:
+            type: string
+      summary: Update a customer
+      tags:
+      - customers
+    post:
+      consumes:
+      - application/json
+      description: Creates a new customer for a restaurant table
+      parameters:
+      - description: Customer data
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateCustomerDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.Customer'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Failed to create customer
+          schema:
+            type: string
+      summary: Create a new customer
+      tags:
+      - customers
+  /restaurant-tables/pending-delivery:
+    get:
+      description: Returns a list of restaurant tables where orders are pending delivery
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.RestaurantTable'
+            type: array
+        "500":
+          description: Failed to get pending delivery tables
+          schema:
+            type: string
+      summary: Get tables with pending delivery
+      tags:
+      - restaurant-tables
+  /restaurant-tables/pending-payment:
+    get:
+      description: Returns a list of restaurant tables where customers have not yet
+        paid
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.RestaurantTable'
+            type: array
+        "500":
+          description: Failed to get pending payment tables
+          schema:
+            type: string
+      summary: Get tables with pending payment
+      tags:
+      - restaurant-tables
+swagger: "2.0"

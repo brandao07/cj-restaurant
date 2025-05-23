@@ -13,6 +13,9 @@ COPY . .
 # Install make
 RUN apt-get update && apt-get install -y make
 
+# Set Production Environment
+RUN echo "APP_ENV=production" >> .env
+
 # Ensure Go bin is in PATH for swag
 ENV PATH="$PATH:/go/bin"
 

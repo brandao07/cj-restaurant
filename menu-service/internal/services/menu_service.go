@@ -30,8 +30,6 @@ func (s *MenuService) CreateMenu(createMenuDTO *dtos.CreateMenuDTO) (*dtos.Menu,
 		return nil, fmt.Errorf("not all items found: expected 4, got %d", len(items))
 	}
 
-	
-
 	// Map item IDs to names
 	idToName := make(map[int]string)
 	for _, item := range items {

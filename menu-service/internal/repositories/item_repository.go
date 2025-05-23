@@ -1,10 +1,10 @@
 package repositories
 
 import (
-	"github.com/brandao07/cj-restaurant/menu-service/internal/data/models"
+	"github.com/brandao07/cj-restaurant/menu-service/internal/dtos"
 )
 
 type ItemRepository interface {
-	GetItemByID(id int) (models.Item, error)
-	GetItemsByIDs(ids []int) ([]models.Item, error)
+	GetItemByID(id int) (dtos.Item, error)
+	GetItemsByIDs(ids []int) ([]dtos.Item, error)
 }

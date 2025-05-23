@@ -1,7 +1,7 @@
 package dtos
 
-// Input DTOs 
 
+// CreateMenuDTO represents the payload to create a new menu
 type CreateMenuDTO struct {
     StarterID int  `json:"starter"`
     MainID    int  `json:"main"`
@@ -20,8 +20,7 @@ func NewCreateMenuDTO(starterID, mainID, dessertID, drinkID int, price float32) 
     }
 }
 
-// Output DTOs
-
+// Menu represents a menu response
 type Menu struct {
     ID    int               `json:"id"`
     Items map[string]string `json:"items"` 

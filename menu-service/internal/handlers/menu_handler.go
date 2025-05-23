@@ -18,6 +18,17 @@ func NewMenuHandler(service *services.MenuService) *MenuHandler {
 	return &MenuHandler{Service: service}
 }
 
+// CreateMenu godoc
+// @Summary      Create a new menu
+// @Description  Creates a new menu with the given items and price
+// @Tags         menus
+// @Accept       json
+// @Produce      json
+// @Param        menu  body  dtos.CreateMenuDTO  true  "Menu to create"
+// @Success      201   {object}  dtos.Menu
+// @Failure      400   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /api/menus [post]
 func (h *MenuHandler) CreateMenu(c echo.Context) error {
 	var dto dtos.CreateMenuDTO
 
@@ -35,6 +46,15 @@ func (h *MenuHandler) CreateMenu(c echo.Context) error {
 	return c.JSON(http.StatusCreated, menu)
 }
 
+// DeactivateMenu godoc
+// @Summary      Deactivate a menu
+// @Description  Sets deleted_at for a menu
+// @Tags         menus
+// @Param        id   path      int  true  "Menu ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /api/menus/{id}/deactivate [patch]
 func (h *MenuHandler) DeactivateMenu(c echo.Context) error {
 	id := c.Param("id")
 	menuID, err := strconv.Atoi(id)

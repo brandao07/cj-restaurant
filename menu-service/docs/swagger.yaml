@@ -1,0 +1,99 @@
+basePath: /
+definitions:
+  dtos.CreateMenuDTO:
+    properties:
+      dessert:
+        type: integer
+      drink:
+        type: integer
+      main:
+        type: integer
+      price:
+        type: number
+      starter:
+        type: integer
+    type: object
+  dtos.Menu:
+    properties:
+      id:
+        type: integer
+      items:
+        additionalProperties:
+          type: string
+        type: object
+      price:
+        type: number
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: API for managing restaurant menus.
+  title: CJ Restaurant Menu-Service API
+  version: "1.0"
+paths:
+  /api/menus:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new menu with the given items and price
+      parameters:
+      - description: Menu to create
+        in: body
+        name: menu
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateMenuDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.Menu'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new menu
+      tags:
+      - menus
+  /api/menus/{id}/deactivate:
+    patch:
+      description: Sets deleted_at for a menu
+      parameters:
+      - description: Menu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deactivate a menu
+      tags:
+      - menus
+swagger: "2.0"

@@ -6,6 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 )
 
 type DB struct {
@@ -29,7 +30,7 @@ func NewDB(dsn string) (*DB, error) {
 			break
 		}
 
-		fmt.Printf("Attempt %d: Could not connect to DB: %v\n", i, err)
+		log.Printf("Attempt %d: Could not connect to DB: %v\n", i, err)
 		time.Sleep(delay)
 	}
 

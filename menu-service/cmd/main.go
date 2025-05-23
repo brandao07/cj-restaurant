@@ -1,13 +1,22 @@
+// @title           CJ Restaurant Menu-Service API
+// @version         1.0
+// @description     API for managing restaurant menus.
+// @host            localhost:8081
+// @BasePath        /
+
 package main
 
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/brandao07/cj-restaurant/menu-service/internal/common"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/data"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/handlers"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/services"
 	"github.com/joho/godotenv"
+	_ "github.com/brandao07/cj-restaurant/menu-service/docs"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -31,6 +40,17 @@ func loadConfig() (*Config, error) {
 	if port == "" {
 		return nil, fmt.Errorf("SERVER_PORT is not set in environment")
 	}
+
+	env := strings.ToLower(os.Getenv("APP_ENV")) 
+
+	// Default to development if not production
+	if env == "" || (env != common.Production && env != common.Development) || env == common.Development {
+    	env = common.Development
+		dsn = "postgres://menu_user:menu_pass@localhost:5433/menu_db"
+		// TODO: Change the future service urls here
+	}
+
+	log.Infof("Running in %s mode", env)
 
 	return &Config{
 		DSN:  dsn,
@@ -66,12 +86,12 @@ func main() {
 	menuService := services.NewMenuService(menuRepository, itemRepository)
 	menuHandler := handlers.NewMenuHandler(menuService)
 
-	appHandlers := Handlers{
+	appHandlers := &Handlers{
 		MenuHandler: menuHandler,
 	}
 
 	// Set up the server
-    e := NewRouter(&appHandlers)
+    e := NewRouter(appHandlers)
     addr := ":" + config.Port
     log.Info("Starting server on ", addr)
     e.Logger.Fatal(e.Start(addr))

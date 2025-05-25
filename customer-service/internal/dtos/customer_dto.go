@@ -2,12 +2,14 @@ package dtos
 
 // CreateCustomerDTO represents the payload to create a new customer
 type CreateCustomerDTO struct {
-	RestaurantTableID int `json:"restaurant_table_id"`
-	OrderID           int `json:"order_id"`
+	MenuIDs           []int `json:"menu_ids"`
+	RestaurantTableID int   `json:"restaurant_table_id"`
+	OrderID           int   `json:"order_id"`
 }
 
-func NewCreateCustomerDTO(restaurantTableID, orderID int) *CreateCustomerDTO {
+func NewCreateCustomerDTO(menuIDs []int, restaurantTableID, orderID int) *CreateCustomerDTO {
 	return &CreateCustomerDTO{
+		MenuIDs:           menuIDs,
 		RestaurantTableID: restaurantTableID,
 		OrderID:           orderID,
 	}

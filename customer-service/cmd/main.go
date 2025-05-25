@@ -23,8 +23,10 @@ import (
 )
 
 type Config struct {
-	DSN  string
-	Port string
+	DSN             string
+	Port            string
+	MenuServiceURL  string
+	OrderServiceURL string
 }
 
 func loadConfig() (*Config, error) {
@@ -42,22 +44,33 @@ func loadConfig() (*Config, error) {
 		return nil, fmt.Errorf("SERVER_PORT is not set in environment")
 	}
 
-	env := strings.ToUpper(os.Getenv("APP_ENV"))
+	menuServiceURL := os.Getenv("MENU_SERVICE_URL")
+	if menuServiceURL == "" {
+		return nil, fmt.Errorf("MENU_SERVICE_URL is not set in environment")
+	}
 
-	log.Info("Environment: ", env)
+	orderServiceURL := os.Getenv("ORDER_SERVICE_URL")
+	if orderServiceURL == "" {
+		return nil, fmt.Errorf("ORDER_SERVICE_URL is not set in environment")
+	}
+
+	env := strings.ToUpper(os.Getenv("APP_ENV"))
 
 	// Default to development if not production
 	if env == "" || (env != common.Production && env != common.Development) || env == common.Development {
 		env = common.Development
 		dsn = "postgres://customer_user:customer_pass@localhost:5434/customer_db"
-		// TODO: Change the future service urls here
+		menuServiceURL = "http://localhost:8081/api"
+		orderServiceURL = "http://localhost:8083/api"
 	}
 
 	log.Infof("Running in %s mode", env)
 
 	return &Config{
-		DSN:  dsn,
-		Port: port,
+		DSN:             dsn,
+		Port:            port,
+		MenuServiceURL:  menuServiceURL,
+		OrderServiceURL: orderServiceURL,
 	}, nil
 }
 
@@ -85,7 +98,7 @@ func main() {
 
 	// Initialize Repositories, Services, and Handlers
 	customerRepository := db
-	customerService := services.NewCustomerService(customerRepository)
+	customerService := services.NewCustomerService(customerRepository, config.MenuServiceURL, config.OrderServiceURL)
 	customerHandler := handlers.NewCustomerHandler(customerService)
 
 	appHandlers := &Handlers{

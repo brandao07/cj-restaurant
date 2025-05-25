@@ -41,13 +41,12 @@ func loadConfig() (*Config, error) {
 		return nil, fmt.Errorf("SERVER_PORT is not set in environment")
 	}
 
-	env := strings.ToLower(os.Getenv("APP_ENV"))
+	env := strings.ToUpper(os.Getenv("APP_ENV"))
 
 	// Default to development if not production
 	if env == "" || (env != common.Production && env != common.Development) || env == common.Development {
 		env = common.Development
 		dsn = "postgres://menu_user:menu_pass@localhost:5433/menu_db"
-		// TODO: Change the future service urls here
 	}
 
 	log.Infof("Running in %s mode", env)

@@ -101,8 +101,13 @@ func main() {
 	customerService := services.NewCustomerService(customerRepository, config.MenuServiceURL, config.OrderServiceURL)
 	customerHandler := handlers.NewCustomerHandler(customerService)
 
+	restaurantTableRepository := db
+	restaurantTableService := services.NewRestaurantTableService(restaurantTableRepository)
+	restaurantTableHandler := handlers.NewRestaurantTableHandler(restaurantTableService)
+
 	appHandlers := &Handlers{
-		CustomerHandler: customerHandler,
+		CustomerHandler:        customerHandler,
+		RestaurantTableHandler: restaurantTableHandler,
 	}
 
 	// Set up the server

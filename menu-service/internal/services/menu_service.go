@@ -70,3 +70,16 @@ func (s *MenuService) GetAllActiveMenus() ([]dtos.Menu, error) {
 
 	return menus, nil
 }
+
+func (s *MenuService) GetMenusByIDs(ids []int) ([]dtos.Menu, error) {
+	menus, err := s.MenuRepository.GetMenusByIDs(ids)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(menus) == 0 {
+		return nil, fmt.Errorf("no menus found for the given IDs")
+	}
+
+	return menus, nil
+}

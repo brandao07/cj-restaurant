@@ -41,7 +41,7 @@ func (s *CustomerService) CreateCustomer(dto dtos.CreateCustomerDTO) (*dtos.Cust
 		menuIds = append(menuIds, menu.ID)
 	}
 
-	//Connect to Order-Service Microservice to create a new order
+	// Connect to Order-Service Microservice to create a new order
 	createOrderDTO := dtos.CreateRestaurantOrderDTO{
 		MenuIDs: menuIds,
 		Total:   totalPrice,

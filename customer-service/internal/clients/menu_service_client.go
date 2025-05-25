@@ -35,7 +35,6 @@ func (c *menuServiceClient) GetMenus(ids []int) ([]dtos.Menu, error) {
 	idParam := strings.Join(idStrings, ",")
 
 	// Make the GET request with query param ?ids=1,2,3
-	//TODO: create endpoint
 	resp, err := c.client.R().
 		SetQueryParam("ids", idParam).
 		SetResult(&[]dtos.Menu{}).

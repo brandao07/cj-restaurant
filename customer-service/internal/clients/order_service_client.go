@@ -1,12 +1,14 @@
 package clients
 
 import (
+	"fmt"
+
 	"github.com/brandao07/cj-restaurant/customer-service/internal/dtos"
 	"github.com/go-resty/resty/v2"
 )
 
 type OrderServiceClient interface {
-	CreateOrder(dto dtos.CreateRestaurantOrderDTO) (dtos.RestaurantOrder, error)
+	CreateOrder(dto dtos.CreateRestaurantOrderDTO) (*dtos.RestaurantOrder, error)
 }
 
 type orderServiceClient struct {
@@ -23,7 +25,20 @@ func NewOrderServiceClient(baseURL string) OrderServiceClient {
 	}
 }
 
-func (c *orderServiceClient) CreateOrder(dto dtos.CreateRestaurantOrderDTO) (dtos.RestaurantOrder, error) {
-	// implementation of CreateOrder method
-	panic("CreateOrder method not implemented")
+func (c *orderServiceClient) CreateOrder(dto dtos.CreateRestaurantOrderDTO) (*dtos.RestaurantOrder, error) {
+	resp, err := c.client.R().
+		SetBody(dto).
+		SetResult(&dtos.RestaurantOrder{}).
+		Post("/orders")
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.IsError() {
+		return nil, fmt.Errorf("menu service returned status %d", resp.StatusCode())
+	}
+
+	order := *resp.Result().(*dtos.RestaurantOrder)
+	return &order, nil
 }

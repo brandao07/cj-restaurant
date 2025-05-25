@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/brandao07/cj-restaurant/menu-service/internal/dtos"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/services"
@@ -64,19 +65,52 @@ func (h *MenuHandler) DeactivateMenu(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{"status": "success"})
 }
 
-// GetAllActiveMenus godoc
-// @Summary      Get all active menus
-// @Description  Returns a list of all active menus (not soft-deleted)
+// GetMenus godoc
+//
+// @Summary      Get menus by IDs or all active menus
+// @Description  If the "ids" query parameter is provided (e.g. ?ids=1,2,3), fetches the menus with those IDs.
+//
+//	Otherwise, returns all active menus.
+//
 // @Tags         menus
+// @Accept       json
 // @Produce      json
-// @Success      200  {array}   dtos.Menu
-// @Failure      500  {object}  map[string]string
-// @Router       /api/menus [get]
-func (h *MenuHandler) GetAllActiveMenus(c echo.Context) error {
-	menus, err := h.Service.GetAllActiveMenus()
+// @Param        ids   query     []int  false  "List of Menu IDs to fetch (comma-separated)"
+// @Success      200   {array}   dtos.Menu
+// @Failure      400   {object}  map[string]string  "Invalid request"
+// @Failure      500   {object}  map[string]string  "Internal server error"
+// @Router       /menus [get]
+func (h *MenuHandler) GetMenus(c echo.Context) error {
+	if c.QueryParam("ids") != "" {
+		return h.getMenusByIDs(c)
+	}
+	return h.getAllActiveMenus(c)
+}
+
+func (h *MenuHandler) getMenusByIDs(c echo.Context) error {
+	idsParam := c.QueryParam("ids")
+	idStrs := strings.Split(idsParam, ",")
+
+	var ids []int
+	for _, s := range idStrs {
+		id, err := strconv.Atoi(strings.TrimSpace(s))
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID format: " + s})
+		}
+		ids = append(ids, id)
+	}
+
+	menus, err := h.Service.GetMenusByIDs(ids)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch menus: " + err.Error()})
 	}
+	return c.JSON(http.StatusOK, menus)
+}
 
+func (h *MenuHandler) getAllActiveMenus(c echo.Context) error {
+	menus, err := h.Service.GetAllActiveMenus()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch active menus: " + err.Error()})
+	}
 	return c.JSON(http.StatusOK, menus)
 }

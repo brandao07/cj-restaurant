@@ -11,12 +11,12 @@ import (
 	"os"
 	"strings"
 
+	_ "github.com/brandao07/cj-restaurant/menu-service/docs"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/common"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/data"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/handlers"
 	"github.com/brandao07/cj-restaurant/menu-service/internal/services"
 	"github.com/joho/godotenv"
-	_ "github.com/brandao07/cj-restaurant/menu-service/docs"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -41,11 +41,11 @@ func loadConfig() (*Config, error) {
 		return nil, fmt.Errorf("SERVER_PORT is not set in environment")
 	}
 
-	env := strings.ToLower(os.Getenv("APP_ENV")) 
+	env := strings.ToLower(os.Getenv("APP_ENV"))
 
 	// Default to development if not production
 	if env == "" || (env != common.Production && env != common.Development) || env == common.Development {
-    	env = common.Development
+		env = common.Development
 		dsn = "postgres://menu_user:menu_pass@localhost:5433/menu_db"
 		// TODO: Change the future service urls here
 	}
@@ -91,8 +91,8 @@ func main() {
 	}
 
 	// Set up the server
-    e := NewRouter(appHandlers)
-    addr := ":" + config.Port
-    log.Info("Starting server on ", addr)
-    e.Logger.Fatal(e.Start(addr))
+	e := NewRouter(appHandlers)
+	addr := ":" + config.Port
+	log.Info("Starting server on ", addr)
+	e.Logger.Fatal(e.Start(addr))
 }

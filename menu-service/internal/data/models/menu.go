@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/brandao07/cj-restaurant/menu-service/internal/common"
+	"github.com/brandao07/cj-restaurant/menu-service/internal/dtos"
+)
 
 // Database Model
 
@@ -23,4 +28,14 @@ type MenuWithNames struct {
 	DessertName string  `db:"dessert_name"`
 	DrinkName   string  `db:"drink_name"`
 	Price       float32 `db:"price"`
+}
+
+func (m MenuWithNames) MenuWithNamesToDTO() dtos.Menu {
+	items := map[string]string{
+		common.MenuStarter: m.StarterName,
+		common.MenuMain:    m.MainName,
+		common.MenuDessert: m.DessertName,
+		common.MenuDrink:   m.DrinkName,
+	}
+	return *dtos.NewMenu(m.ID, items, m.Price)
 }

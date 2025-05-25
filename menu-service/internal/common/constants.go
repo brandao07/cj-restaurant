@@ -8,6 +8,6 @@ const (
 )
 
 const (
-	Production  = "production"
-	Development = "development"
+	Production  = "PRODUCTION"
+	Development = "DEVELOPMENT"
 )

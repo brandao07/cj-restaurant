@@ -9,4 +9,5 @@ type MenuRepository interface {
 	CreateMenu(CreateMenuDTO *dtos.CreateMenuDTO) (*models.Menu, error)
 	DeactivateMenu(id int) error
 	GetAllActiveMenus() ([]dtos.Menu, error)
+	GetMenusByIDs(ids []int) ([]dtos.Menu, error)
 }

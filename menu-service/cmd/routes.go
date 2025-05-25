@@ -30,7 +30,7 @@ func NewRouter(h *Handlers) *echo.Echo {
 	menus := api.Group("/menus")
 	menus.POST("", h.MenuHandler.CreateMenu)
 	menus.PATCH("/:id/deactivate", h.MenuHandler.DeactivateMenu)
-	menus.GET("", h.MenuHandler.GetAllActiveMenus)
+	menus.GET("", h.MenuHandler.GetMenus)
 
 	return e
 }

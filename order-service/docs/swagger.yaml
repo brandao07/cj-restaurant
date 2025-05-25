@@ -1,9 +1,101 @@
 basePath: /
+definitions:
+  dtos.CreateRestaurantOrderDTO:
+    properties:
+      menu_ids:
+        items:
+          type: integer
+        type: array
+      total:
+        type: number
+    type: object
+  dtos.RestaurantOrder:
+    properties:
+      id:
+        type: integer
+      menu_ids:
+        items:
+          type: integer
+        type: array
+      status:
+        type: string
+      total:
+        type: number
+    type: object
+  dtos.UpdateRestaurantOrderDTO:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    type: object
 host: localhost:8083
 info:
   contact: {}
   description: API for managing restaurant orders.
   title: CJ Restaurant Order-Service API
   version: "1.0"
-paths: {}
+paths:
+  /restaurant-orders:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new restaurant order with the provided menu IDs and total.
+      parameters:
+      - description: Restaurant Order Data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRestaurantOrderDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dtos.RestaurantOrder'
+      summary: Create a new restaurant order
+      tags:
+      - restaurant_orders
+    put:
+      consumes:
+      - application/json
+      description: Updates the status of an existing restaurant order.
+      parameters:
+      - description: Restaurant Order Update Data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateRestaurantOrderDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order updated successfully
+      summary: Update a restaurant order status
+      tags:
+      - restaurant_orders
+  /restaurant-orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a restaurant order by its unique ID.
+      parameters:
+      - description: Restaurant Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.RestaurantOrder'
+      summary: Get restaurant order by ID
+      tags:
+      - restaurant_orders
 swagger: "2.0"

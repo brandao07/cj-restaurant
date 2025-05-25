@@ -26,10 +26,11 @@ func NewRouter(h *Handlers) *echo.Echo {
 		return c.String(http.StatusOK, "pong")
 	})
 
-	// api := e.Group("/api")
-	// orders := api.Group("/orders")
-	// orders.POST("", h.OrderHandler.CreateOrder)
-	// orders.PATCH("/:id", h.OrderHandler.UpdateOrder)
+	api := e.Group("/api")
+	restaurantOrders := api.Group("/orders")
+	restaurantOrders.POST("", h.RestaurantOrderHandler.CreateRestaurantOrder)
+	restaurantOrders.PATCH("/:id", h.RestaurantOrderHandler.UpdateRestaurantOrder)
+	restaurantOrders.GET("/:id", h.RestaurantOrderHandler.GetRestaurantOrderByID)
 
 	return e
 }

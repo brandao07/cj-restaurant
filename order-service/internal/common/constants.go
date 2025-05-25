@@ -8,4 +8,5 @@ const (
 const (
 	OrderStatusPending   = "PENDING"
 	OrderStatusCompleted = "COMPLETED"
+	OrderStatusCancelled = "CANCELLED"
 )

@@ -1,0 +1,11 @@
+CREATE TABLE restaurant_orders (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+    menu_ids INTEGER[] NOT NULL,
+    total NUMERIC(10,2) NOT NULL DEFAULT 0,
+    status VARCHAR(32) NOT NULL DEFAULT 'PENDING' CHECK (
+        status IN ('PENDING', 'COMPLETED', 'CANCELLED')
+    )
+);

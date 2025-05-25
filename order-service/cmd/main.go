@@ -48,7 +48,6 @@ func loadConfig() (*Config, error) {
 	if env == "" || (env != common.Production && env != common.Development) || env == common.Development {
 		env = common.Development
 		dsn = "postgres://customer_user:customer_pass@localhost:5435/customer_db"
-		// TODO: Change the future service urls here
 	}
 
 	log.Infof("Running in %s mode", env)

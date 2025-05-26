@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   menu-db:
@@ -12,7 +12,7 @@ services:
       - "${MENU_DB_PORT}:5432"
     volumes:
       - ./menu-service/db:/docker-entrypoint-initdb.d
-      - menu-db-data:/var/lib/postgresql/data          
+      - menu-db-data:/var/lib/postgresql/data
     networks:
       - menu-db-net
 
@@ -45,6 +45,7 @@ services:
     ports:
       - "${CUSTOMER_DB_PORT}:5432"
     volumes:
+      - ./customer-service/db:/docker-entrypoint-initdb.d
       - customer-db-data:/var/lib/postgresql/data
     networks:
       - customer-db-net
@@ -78,6 +79,7 @@ services:
     ports:
       - "${ORDER_DB_PORT}:5432"
     volumes:
+      - ./order-service/db:/docker-entrypoint-initdb.d
       - order-db-data:/var/lib/postgresql/data
     networks:
       - order-db-net
